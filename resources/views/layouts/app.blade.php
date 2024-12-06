@@ -5,81 +5,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+    <script type="text/javascript" src="{{ asset('js/sidebar.js') }}" defer></script>
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- CSS Internal -->
+    <style>
+
+        
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            /* background-color: var(--base-clr); */
+            color: var(--base-clr);
+            display: grid;
+            grid-template-columns: auto 1fr;
+        }
+
+        /* Terapkan font Poppins secara global */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Sesuaikan font untuk elemen tertentu jika diperlukan */
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            /* Contoh penerapan font dengan berat khusus */
+        }
+
+        ul li a,
+        .sub-menu li a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            /* Berat reguler untuk teks menu */
+        }
+
+        /* Terapkan pada tombol dan teks lain */
+        button,
+        .btn {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .dropdown-btn span,
+        .dropdown-btn svg {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+    </style>
+
+
     @yield('styles')
 </head>
 
 <body>
-    <div class="d-flex" style="height: 100vh;">
-        <!-- Sidebar -->
-        <nav class="bg-light text-dark p-3" id="sidebar" style="width: 250px;">
-            <h4 class="text-center mb-4">Sertifikat PKL</h4>
-            <ul class="nav flex-column">
+    <!-- Sidebar -->
+    <nav id="sidebar" >
+        <ul>
+            <li>
+                <span class="logo">SIMGANG</span>
+                <button onclick="toggleSidebar()" id="toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="m313-480 155 156q11 11 11.5 27.5T468-268q-11 11-28 11t-28-11L228-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T468-692q11 11 11 28t-11 28L313-480Zm264 0 155 156q11 11 11.5 27.5T732-268q-11 11-28 11t-28-11L492-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T732-692q11 11 11 28t-11 28L577-480Z" />
+                    </svg>
+                </button>
+            </li>
 
-                <!-- Checking user role -->
-                @if(Auth::check() && Auth::user()->role == 'siswa')
 
-                    <!-- Sidebar untuk 'siswa' -->
-                    <li class="nav-item mb-3">
-                        <a class="nav-link d-flex align-items-center" href="{{ route('siswa.showsiswa') }}" style="color: #000;">
-                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                        </a>
-                    </li>
+            <!-- Checking user role -->
+            @if (Auth::check() && Auth::user()->role == 'siswa')
+                <!-- Sidebar for 'siswa' -->
+                <li class="{{ request()->routeIs('siswa.showsiswa') ? 'active' : '' }}">
+                    <a href="{{ route('siswa.showsiswa') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e8eaed">
+                            <path
+                                d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+            @elseif(Auth::check() && Auth::user()->role == 'mentor')
+                <!-- Sidebar for 'mentor' -->
+                <li>
+                    <a href="{{ route('mentor.dashboard') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e8eaed">
+                            <path
+                                d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('mentor.dashboard') ? 'active' : '' }}"">
+                    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e8eaed">
+                            <path
+                                d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h207q16 0 30.5 6t25.5 17l57 57h320q33 0 56.5 23.5T880-640v400q0 33-23.5 56.5T800-160H160Zm0-80h640v-400H447l-80-80H160v480Zm400-160v-40q0-17 11.5-28.5T600-320q17 0 28.5-11.5T640-360v-40h40q17 0 28.5-11.5T720-440q0-17-11.5-28.5T680-480h-40v-40q0-17-11.5-28.5T600-560q-17 0-28.5 11.5T560-520v40h-40q-17 0-28.5 11.5T480-440q0 17 11.5 28.5T520-400h40Z" />
+                        </svg>
+                        <span>Create</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e8eaed">
+                            <path
+                                d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+                        </svg>
+                    </button>
+                    <ul class="sub-menu">
+                        <div>
+                            <li><a href="{{ route('siswa.showsiswa') }}">Siswa</a></li>
+                            <li><a href="{{ route('user.index') }}">Pengguna</a></li>
+                            <li><a href="{{ route('penilaian.index') }}">Penilaian</a></li>
+                        </div>
+                    </ul>
+                </li>
+            @endif
 
-                @elseif(Auth::check() && Auth::user()->role == 'mentor')
-                    <!-- Sidebar untuk 'mentor' -->
-                    <li class="nav-item mb-3">
-                        <a class="nav-link d-flex align-items-center" href="{{ route('siswa.showsiswa') }}" style="color: #000;">
-                            <i class="fas fa-users me-2"></i> Siswa
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link d-flex align-items-center" href="{{ route('user.index') }}" style="color: #000;">
-                            <i class="fas fa-user-cog me-2"></i> Pengguna
-                        </a>
-                    </li>
-                @endif
-            </ul>
-            
             <!-- User Authentication Links -->
-            <hr class="bg-secondary">
-            <ul class="nav flex-column">
-                @guest
-                    <li class="nav-item mb-3">
-                        <a class="nav-link d-flex align-items-center" href="{{ route('login') }}" style="color: #000;">
-                            <i class="fas fa-sign-in-alt me-2"></i> Login
-                        </a>
-                    </li>
-                @else
-                    <li class="nav-item dropdown mb-3">
-                        <a class="nav-link d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #000;">
-                            <i class="fas fa-user me-2"></i> {{ Auth::user()->username }}
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            @guest
+                <li>
+                    <a href="{{ route('login') }}"">
+                        <i class=" fas fa-sign-in-alt me-2"></i> Login
+                    </a>
+                </li>
+            @else
+                <li>
+                    <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e8eaed">
+                            <path
+                                d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+                        </svg>
+                        <span>{{ Auth::user()->username }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#e8eaed">
+                            <path
+                                d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+                        </svg>
+                    </button>
+                    <ul class="sub-menu">
+                        <div>
                             <li>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    style="display: none;">
                                     @csrf
-                                    <button class="dropdown-item" type="submit">Logout</button>
                                 </form>
                             </li>
-                        </ul>
-                    </li>
-                @endguest
-            </ul>
-        </nav>
+                        </div>
+                    </ul>
+                </li>
+            @endguest
+        </ul>
+    </nav>
 
-        <!-- Main Content -->
-        <div class="container mt-4">
-            @yield('content')
-        </div>
+    <!-- Main Content -->
+    <div class="">
+        @yield('content')
+    </div>
 
-        <!-- Bootstrap Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        @yield('scripts')
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('scripts')
 </body>
 
 </html>

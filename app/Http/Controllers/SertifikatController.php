@@ -2,29 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Penilaian;
 use Illuminate\Http\Request;
 use App\Models\SertifikatPKL;
-use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\PDF as PDF;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class SertifikatController extends Controller
 {
-    public function index()
+
+    public function dashboard()
     {
-        $sertifikats = SertifikatPKL::all();
+        return view('mentor.dashboard');
+    }
+
+    public function index(Request $request)
+    {
         $role = Auth::user()->role;
 
         if ($role == 'siswa') {
 
             $user = Auth::user();
-            $sertifikats = SertifikatPKL::where('nim_nis', $user->username)->get();
-            Log::info('Sertifikats for user:', ['sertifikats' => $sertifikats]);
+            $sertifikats = SertifikatPKL::where('nim_nis', $user->username)
+                ->when($request->has('search'), function ($query) use ($request) {
+                    $query->where('nama_lengkap', 'LIKE', '%' . $request->search . '%');
+                })->paginate(10);
 
             return view('siswa.showsiswa', compact('sertifikats'));
         } elseif ($role == 'mentor') {
 
-        $sertifikats = SertifikatPKL::all();
+            $sertifikats = SertifikatPKL::when($request->has('search'), function ($query) use ($request) {
+                $query->where('nama_lengkap', 'LIKE', '%' . $request->search . '%');
+            })->paginate(10);
             return view('mentor.index', compact('sertifikats'));
         }
         return abort(403, 'Unauthorized action.');
@@ -37,7 +48,7 @@ class SertifikatController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Store request data:', $request->all());
+        // Log::info('Store request data:', $request->all());
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:50',
             'asal_sekolah' => 'required|string|max:50',
@@ -50,6 +61,7 @@ class SertifikatController extends Controller
             'tgl_sertifikat' => 'required|date',
             'nm_pembimbing' => 'required|string|max:50',
             'nik_pembimbing' => 'required|string|max:20',
+            'bidang' => 'required|string|max:50',
             'jabatan_pembimbing' => 'required|string|max:50',
             'no_sertifikat' => 'required|string|max:50',
             'nm_kadis' => 'required|string|max:50',
@@ -62,6 +74,12 @@ class SertifikatController extends Controller
         SertifikatPKL::create($validatedData);
 
         return redirect()->route('mentor.index')->with('success', 'Sertifikat berhasil ditambahkan.');
+    }
+
+    public function cetak(SertifikatPKL $sertifikat)
+    {
+        $data = array('id' => $sertifikat);
+        return view('mentor.cetak', compact('sertifikat'));
     }
 
     public function show(SertifikatPKL $sertifikat)
@@ -88,6 +106,7 @@ class SertifikatController extends Controller
             'tgl_sertifikat' => 'required|date',
             'nm_pembimbing' => 'required|string|max:50',
             'nik_pembimbing' => 'required|string|max:20',
+            'bidang' => 'required|string|max:50',
             'jabatan_pembimbing' => 'required|string|max:50',
             'no_sertifikat' => 'required|string|max:50',
             'nm_kadis' => 'required|string|max:50',
@@ -108,5 +127,39 @@ class SertifikatController extends Controller
 
         return redirect()->route('mentor.index')->with('success', 'Sertifikat berhasil dihapus.');
     }
-}
 
+    public function cetakPDF(SertifikatPKL $sertifikat)
+    {
+        // Cek jika sertifikat tidak ditemukan
+        if (!$sertifikat) {
+            return redirect()->route('mentor.index')->with('error', 'Data sertifikat tidak ditemukan.');
+        }
+
+        $htmlContent = view('mentor.cetak', compact('sertifikat'))->render();
+
+        $pdf = app('dompdf.wrapper')->loadView('mentor.cetak', compact('sertifikat'));
+        $pdf->setPaper('A4', 'landscape')->setOption('margin',0);
+
+        // Nama file PDF
+        $fileName = 'sertifikat_' . $sertifikat->nim_nis . '.pdf';
+
+        // Download file PDF
+        return $pdf->download($fileName);
+    }
+
+    public function cetakGabung($id){
+
+    $sertifikat = SertifikatPKL::findOrFail($id);
+    $penilaians = Penilaian::where('id_sertifikat', $id)->get();
+
+    $htmlContent = view('sertifikat.cetak_gabung', compact('sertifikat', 'penilaians'))->render();
+
+    $pdf = app('dompdf.wrapper');
+    $pdf->loadHTML($htmlContent);
+
+    $pdf->setPaper('A4', 'portrait');
+    $fileName = 'sertifikat_' . $sertifikat->nama_lengkap . '.pdf';
+
+    return $pdf->download($fileName);
+    }
+}

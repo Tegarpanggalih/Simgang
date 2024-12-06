@@ -33,7 +33,7 @@ class LoginController extends Controller
             if ($user->role === 'siswa') {
                 return redirect()->route('siswa.showsiswa'); // Route untuk siswa
             } elseif ($user->role === 'mentor') {
-                return redirect()->route('mentor.index'); // Route untuk mentor
+                return redirect()->route('mentor.dashboard'); // Route untuk mentor
             }
         } else {
             return redirect()->route('login')->with('error', 'Username atau password salah.');
