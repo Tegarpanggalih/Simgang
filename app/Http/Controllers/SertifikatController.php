@@ -30,7 +30,7 @@ class SertifikatController extends Controller
                     $query->where('nama_lengkap', 'LIKE', '%' . $request->search . '%');
                 })->paginate(10);
 
-            return view('siswa.showsiswa', compact('sertifikats'));
+            return view('siswa.dashboard', compact('sertifikats'));
         } elseif ($role == 'mentor') {
 
             $sertifikats = SertifikatPKL::when($request->has('search'), function ($query) use ($request) {

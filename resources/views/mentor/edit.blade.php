@@ -189,6 +189,7 @@
                                     <option value="Bidang Statistik dan Persandian"
                                         {{ old('bidang', $sertifikat->bidang) == 'Bidang Statistik dan Persandian' ? 'selected' : '' }}>
                                         Bidang Statistik dan Persandian</option>
+                                    </select>
                                     @error('bidang')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror

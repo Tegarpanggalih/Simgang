@@ -147,7 +147,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="nm_pembimbing">Nama Pembimbing</label>
                                 <input type="text" name="nm_pembimbing" id="nm_pembimbing" class="form-control"
                                     value="{{ old('nm_pembimbing') }}" required>
@@ -156,7 +156,7 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="nik_pembimbing">NIK Pembimbing</label>
                                 <input type="text" name="nik_pembimbing" id="nik_pembimbing" class="form-control"
                                     value="{{ old('nik_pembimbing') }}" required>
@@ -164,10 +164,8 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="jabatan_pembimbing">Jabatan Pembimbing</label>
                                 <input type="text" name="jabatan_pembimbing" id="jabatan_pembimbing"
                                     class="form-control" value="{{ old('jabatan_pembimbing') }}" required>
@@ -175,8 +173,29 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+                        </div>
 
-                            <div class="col-md-6 mb-3">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="bidang">Bidang</label>
+                                <select name="bidang" id="bidang" class="form-control" required>
+                                    <option value="">Pilih Bidang</option>
+                                    <option value="Bidang Informatika"
+                                        {{ old('bidang') == 'Bidang Informatika' ? 'selected' : '' }}>Bidang Informatika
+                                    </option>
+                                    <option value="Bidang Informasi dan Kepentingan Publik"
+                                        {{ old('bidang') == 'Bidang Informasi dan Kepentingan Publik' ? 'selected' : '' }}>
+                                        Bidang Informasi dan Kepentingan Publik</option>
+                                    <option value="Bidang Statistik dan Persandian"
+                                        {{ old('bidang') == 'Bidang Statistik dan Persandian' ? 'selected' : '' }}>Bidang
+                                        Statistik dan Persandian</option>
+                                </select>
+                                    @error('bidang')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                            </div>
+
+                            <div class="col-md-4 mb-3">
                                 <label for="aprove_pembimbing">Status Persetujuan Pembimbing</label>
                                 <select name="aprove_pembimbing" id="aprove_pembimbing" class="form-control" required>
                                     <option value="">Pilih Status</option>
@@ -192,23 +211,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label for="bidang">Bidang</label>
-                            <select name="bidang" id="bidang" class="form-control" required>
-                                <option value="">Pilih Bidang</option>
-                                <option value="Bidang Informatika"
-                                    {{ old('bidang') == 'Bidang Informatika' ? 'selected' : '' }}>Bidang Informatika
-                                </option>
-                                <option value="Bidang Informasi dan Kepentingan Publik"
-                                    {{ old('bidang') == 'Bidang Informasi dan Kepentingan Publik' ? 'selected' : '' }}>
-                                    Bidang Informasi dan Kepentingan Publik</option>
-                                <option value="Bidang Statistik dan Persandian"
-                                    {{ old('bidang') == 'Bidang Statistik dan Persandian' ? 'selected' : '' }}>Bidang
-                                    Statistik dan Persandian</option>
-                                @error('bidang')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                        </div>
+                      
 
                         <button type="button" class="btn btn-secondary" onclick="previousStep(2)">Kembali</button>
                         <button type="button" class="btn btn-primary" onclick="nextStep(4)">Lanjut</button>

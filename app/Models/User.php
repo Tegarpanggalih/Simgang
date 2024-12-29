@@ -29,7 +29,7 @@ class User extends Authenticatable
 
     public function sertifikats()
     {
-        return $this->hasMany(SertifikatPKL::class, 'nim_nis', 'username');
+        return $this->hasOne(SertifikatPKL::class, 'nim_nis', 'username');
     }
 
     public function getAuthPassword()

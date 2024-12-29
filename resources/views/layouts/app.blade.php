@@ -19,8 +19,6 @@
 
     <!-- CSS Internal -->
     <style>
-
-        
         body {
             min-height: 100vh;
             min-height: 100dvh;
@@ -69,7 +67,7 @@
 
 <body>
     <!-- Sidebar -->
-    <nav id="sidebar" >
+    <nav id="sidebar">
         <ul>
             <li>
                 <span class="logo">SIMGANG</span>
@@ -86,8 +84,8 @@
             <!-- Checking user role -->
             @if (Auth::check() && Auth::user()->role == 'siswa')
                 <!-- Sidebar for 'siswa' -->
-                <li class="{{ request()->routeIs('siswa.showsiswa') ? 'active' : '' }}">
-                    <a href="{{ route('siswa.showsiswa') }}">
+                <li class="{{ request()->routeIs('siswa.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('siswa.dashboard') }}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                             fill="#e8eaed">
                             <path
@@ -95,6 +93,20 @@
                         </svg>
                         <span>Dashboard</span>
                     </a>
+                </li>
+                <li>
+                    @if($sertifikat)
+                    <a href="{{ route('siswa.nilai',['id_sertifikat' => $sertifikat->id_sertifikat]) }}">
+                        <svg id="Layer_1" height="24px" viewBox="0 0 24 24" width="24px"
+                            xmlns="http://www.w3.org/2000/svg" data-name="Layer 1">
+                            <path
+                                d="m19.828 3.414-2.242-2.242a4.024 4.024 0 0 0 -2.828-1.172h-8.758a3 3 0 0 0 -3 3v21h18v-17.758a4.024 4.024 0 0 0 -1.172-2.828zm-1.414 1.414a2.113 2.113 0 0 1 .141.172h-2.555v-2.555a2.113 2.113 0 0 1 .172.141zm-13.414 17.172v-19a1 1 0 0 1 1-1h8v5h5v15zm9-5h3v2h-3zm1-2v-1.707a6.964 6.964 0 0 0 -.621-2.883l-.522-1.153a2 2 0 0 0 -3.7-.04l-.539 1.194a6.956 6.956 0 0 0 -.618 2.882v1.707h2v-1h2v1zm-2.982-4.959.539 1.192a4.949 4.949 0 0 1 .252.767h-1.618a4.9 4.9 0 0 1 .252-.766zm-.478 6 1.42 1.408-1.866 1.884a2.255 2.255 0 0 1 -3.185 0l-.873-.891 1.428-1.4.866.884a.249.249 0 0 0 .347-.007z" />
+                        </svg>
+                        <span>Nilai</span>
+                    </a>
+                    @else
+                    <span>Nilai</span>
+                    @endif
                 </li>
             @elseif(Auth::check() && Auth::user()->role == 'mentor')
                 <!-- Sidebar for 'mentor' -->
@@ -124,7 +136,7 @@
                     </button>
                     <ul class="sub-menu">
                         <div>
-                            <li><a href="{{ route('siswa.showsiswa') }}">Siswa</a></li>
+                            <li><a href="{{ route('siswa.dashboard') }}">Siswa</a></li>
                             <li><a href="{{ route('user.index') }}">Pengguna</a></li>
                             <li><a href="{{ route('penilaian.index') }}">Penilaian</a></li>
                         </div>

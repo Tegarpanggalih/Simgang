@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\PDF;
 use App\Models\Penilaian;
 use Illuminate\Http\Request;
 use App\Models\SertifikatPKL;
-use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class PenilaianController extends Controller
 {
@@ -33,7 +34,7 @@ class PenilaianController extends Controller
             'aspek' => 'required|string|max:255',
             'nilai' => 'required|numeric',
             'ket' => 'nullable|string',
-            'id_sertifikat' => 'required|exists:tbl_sertifikat_pkl,id'
+            'id_sertifikat' => 'required|exists:tbl_sertifikat_pkl,id_sertifikat'
         ]);
 
         Penilaian::create([
@@ -70,7 +71,7 @@ class PenilaianController extends Controller
             'aspek' => 'required|string|max:255',
             'nilai' => 'required|numeric',
             'ket' => 'nullable|string',
-            'id_sertifikat' => 'required|exists:tbl_sertifikat_pkl,id'
+            'id_sertifikat' => 'required|exists:tbl_sertifikat_pkl,id_sertifikat'
         ]);
 
         $penilaian->update([
@@ -110,5 +111,20 @@ class PenilaianController extends Controller
     
         // Download the PDF
         return $pdf->download($fileName);
+    }
+
+    public function showNilai($id_sertifikat){
+        $sertifikat = SertifikatPKL::find($id_sertifikat);
+
+        // Ambil data penilaian terkait sertifikat
+        $penilaians = Penilaian::where('id_sertifikat', $id_sertifikat)->get();
+    
+        // Cek jika data tidak ditemukan
+        if (!$sertifikat || $penilaians->isEmpty()) {
+            return view('siswa.nilai')->with('error', 'Data tidak ditemukan.');
+        }
+    
+        // Kirim data ke view
+        return view('siswa.nilai', compact('sertifikat', 'penilaians'));
     }
 }

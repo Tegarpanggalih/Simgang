@@ -1,30 +1,42 @@
 @extends('layouts.app')
 
-@section('title', 'Daftar Siswa')
+@section('title', 'Detail Siswa')
 
 @section('content')
-<h1>Selamat Datang, {{ Auth::user()->username ?? 'User' }}!</h1>
-    <h2>Dashboard Sertifikat PKL (Siswa)</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Nama Lengkap</th>
-                <th>Asal Sekolah</th>
-                <th>NIM/NIS</th>
-                <th>Jurusan</th>
-                <th>Tanggal Sertifikat</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($sertifikats as $sertifikat)
-                <tr>
-                    <td>{{ $sertifikat->nama_lengkap }}</td>
-                    <td>{{ $sertifikat->asal_sekolah }}</td>
-                    <td>{{ $sertifikat->nim_nis }}</td>
-                    <td>{{ $sertifikat->jurusan }}</td>
-                    <td>{{ $sertifikat->tgl_sertifikat }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+    <style>
+        .container {
+            border: 1px solid var(--line-clr);
+            padding-top: 2px;
+        }
+    </style>
+
+    <main>
+        <div class="container">
+            <h2 class="">Halo!</h2>
+            <h3 class="">Selamat Datang Kembali, {{ Auth::user()->username ?? 'User' }}!</h3>
+        </div>
+        <div class="container">
+            <h2>SIMGANG</h2>
+            <p>SIMGANG adalah sistem informasi magang yang bertujuan untuk menilai siswa / mahasiswa yang sedang
+                melaksanakan kegiatan magang</p>
+        </div>
+        <div class="container">
+            <h2>Detail Siswa</h2>
+            @if ($sertifikats && !$sertifikats->isEmpty())
+                @foreach ($sertifikats as $sertifikat)
+                    <div class="mb-3">
+                        <p><strong>NIM:</strong> {{ $sertifikat->nim_nis }}</p>
+                        <p><strong>Nama:</strong> {{ $sertifikat->nama_lengkap }}</p>
+                        <p><strong>Asal Sekolah:</strong> {{ $sertifikat->asal_sekolah }}</p>
+                        <p><strong>Jurusan:</strong> {{ $sertifikat->jurusan }}</p>
+                        <p><strong>Tanggal Sertifikat:</strong> {{ $sertifikat->tgl_sertifikat }}</p>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-muted">Tidak ada sertifikat yang ditemukan.</p>
+            @endif
+        </div>
+    </main>
+
 @endsection

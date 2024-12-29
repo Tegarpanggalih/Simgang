@@ -12,7 +12,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/siswa/showsiswa', [SertifikatController::class, 'index'])->name('siswa.showsiswa');
+    Route::get('/siswa/dashboard', [SertifikatController::class, 'index'])->name('siswa.dashboard');
+    Route::get('/siswa/nilai/{id_sertifikat}', [PenilaianController::class, 'showNilai'])->name('siswa.nilai');
     Route::get('/mentor/dashboard', [SertifikatController::class, 'dashboard'])->name('mentor.dashboard');
 
     // routes CRUD

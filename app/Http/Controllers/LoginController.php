@@ -31,7 +31,7 @@ class LoginController extends Controller
             Auth::login($user);
 
             if ($user->role === 'siswa') {
-                return redirect()->route('siswa.showsiswa'); // Route untuk siswa
+                return redirect()->route('siswa.dashboard'); // Route untuk siswa
             } elseif ($user->role === 'mentor') {
                 return redirect()->route('mentor.dashboard'); // Route untuk mentor
             }
